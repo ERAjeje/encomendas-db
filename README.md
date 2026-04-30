@@ -1,6 +1,7 @@
 # Banco de Dados (PostgreSQL)
 
-Container dedicado ao Postgres 16 que servirá como store central da plataforma de portaria. Este diretório contém apenas o bootstrap inicial – sem schema definitivo – para manter paridade de processo com os serviços `backend/` e `ocr/`.
+Container dedicado ao Postgres 16 que serve como store central da plataforma de portaria. O schema
+é gerenciado via migrations versionadas no diretório `migrations/`.
 
 ## Objetivos
 
@@ -56,22 +57,39 @@ db/
 ├── Makefile
 ├── PROGRESS.md
 ├── README.md
+├── postgresql.conf
 ├── migrations/
-│   └── 000_init.sql
+│   ├── 000_init.sql
+│   ├── 001_create_roles.sql
+│   ├── 002_create_users.sql
+│   ├── 003_create_units.sql
+│   ├── 004_create_users_units.sql
+│   ├── 005_create_delivery_sessions.sql
+│   ├── 006_alter_delivery_sessions_add_verification_fields.sql
+│   ├── 007_create_packages.sql
+│   ├── 008_create_receipt_sessions.sql
+│   ├── 009_alter_packages_add_receipt_session_id.sql
+│   └── 010_create_backend_user.sql
+├── scripts/
+│   └── 10-create-app-db.sh
 └── .env.example
 ```
 
-## Comunicação entre serviços
+## Schema
 
-- O container deve compartilhar rede Docker com `backend`/`ocr`.
-- As operações de dados serão expostas a partir de um serviço gRPC (a ser definido) que falará SQL com este Postgres e gRPC com os demais microsserviços.
-- Documente novos contratos `.proto` e scripts de migração antes de qualquer alteração.
-
-## Próximos passos
-
-1. Definir ferramenta de migração (dbmate, Prisma, etc.).
-2. Especificar contrato gRPC para operações de persistência.
-3. Automatizar smoke-test (psql) dentro do pipeline (`make test`).
+| Migration | Descrição |
+| --- | --- |
+| `000_init.sql` | Placeholder inicial |
+| `001_create_roles.sql` | Enum `role_name` (admin, concierge, resident) + tabela `roles` |
+| `002_create_users.sql` | Enum `user_status` + tabela `users` com autenticação |
+| `003_create_units.sql` | Tabela `units` (torre, bloco, apartamento) |
+| `004_create_users_units.sql` | Relação N:N entre users e units |
+| `005_create_delivery_sessions.sql` | Sessões de entrega com `pickup_code` único |
+| `006_alter_delivery_sessions_add_verification_fields.sql` | Verificação (qr_code/manual), documento, override |
+| `007_create_packages.sql` | Pacotes vinculados a delivery sessions |
+| `008_create_receipt_sessions.sql` | Sessões de recebimento pelo concierge |
+| `009_alter_packages_add_receipt_session_id.sql` | Link packages → receipt_sessions |
+| `010_create_backend_user.sql` | Cria usuário `backend_portaria_db_user` com permissões CRUD |
 
 ## Segurança
 
@@ -81,3 +99,7 @@ db/
 - **Auditoria:** `postgresql.conf` habilita logging de conexões, desconexões e DDL.
 - **Healthcheck:** Docker monitora automaticamente a saúde do Postgres via `pg_isready`.
 - **Rotação de senhas:** em produção, atualize a senha em `.env.production` e rode `ALTER USER` via `psql` antes de reiniciar containers.
+
+## Licença
+
+MIT
