@@ -32,6 +32,7 @@ Nenhum teste automatizado ainda. Próxima etapa: adicionar smoke-test que usa `p
 - **Sessões de recebimento:** `migrations/008_create_receipt_sessions.sql` adiciona tabela `receipt_sessions` com enum `receipt_session_status` e auditoria (`started_at`, `finalized_at`).
 - **Pacotes vinculados a sessões:** `migrations/009_alter_packages_add_receipt_session_id.sql` inclui FK `receipt_session_id` na tabela `packages`.
 - **Seleção de ambiente dinâmica:** Makefile agora escolhe automaticamente `.env.<ENVIRONMENT>`, `.env.local` ou `.env` ao rodar `make docker-run`.
+- **Usuário do backend:** `migrations/010_create_backend_user.sql` cria role `backend_portaria_db_user` com permissões limitadas (CRUD + sequences) para acesso seguro pelo serviço backend.
 
 ## Próximos Passos
 
