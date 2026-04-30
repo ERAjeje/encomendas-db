@@ -17,7 +17,12 @@ docker-run: docker-build
 	echo "Using env file: $$SELECTED_ENV"; \
 	(docker stop $(CONTAINER) >/dev/null 2>&1 || true); \
 	(docker rm $(CONTAINER) >/dev/null 2>&1 || true); \
-	docker run -d --name $(CONTAINER) --env-file $$SELECTED_ENV -p $(PORT):5432 $(IMAGE)
+	if [ "$(ENVIRONMENT)" = "production" ]; then \
+		echo "Production mode: not exposing port 5432 to host"; \
+		docker run -d --name $(CONTAINER) --env-file $$SELECTED_ENV --network host $(IMAGE); \
+	else \
+		docker run -d --name $(CONTAINER) --env-file $$SELECTED_ENV -p $(PORT):5432 $(IMAGE); \
+	fi
 
 docker-stop:
 	docker stop $(CONTAINER) >/dev/null 2>&1 || true

@@ -25,6 +25,8 @@ Defina-as em `.env` (baseado em `.env.example`).
 | `POSTGRES_PORT` | Porta exposta local | `5432` |
 | `POSTGRES_INIT_APP_DB` | Banco adicional para apps gRPC | `portaria_app` |
 | `POSTGRES_GRPC_TARGET` | Endpoint gRPC do serviço que consumirá o DB | `backend:8080` |
+| `BACKEND_DB_USER` | Usuário de aplicação para o backend | `backend_portaria_db_user` |
+| `BACKEND_DB_PASSWORD` | Senha do usuário de aplicação | (definida em runtime) |
 
 ## Comandos
 
@@ -70,3 +72,12 @@ db/
 1. Definir ferramenta de migração (dbmate, Prisma, etc.).
 2. Especificar contrato gRPC para operações de persistência.
 3. Automatizar smoke-test (psql) dentro do pipeline (`make test`).
+
+## Segurança
+
+- **Credenciais:** nunca commitar `.env` real. Use `.env.example` como template.
+- **Usuário de aplicação:** o backend deve usar `backend_portaria_db_user` com permissões limitadas (CRUD). Nunca use `portaria_admin` ou `postgres` superuser.
+- **Rede:** em produção, o container não expõe a porta 5432 ao host; comunicação ocorre apenas via rede interna Docker.
+- **Auditoria:** `postgresql.conf` habilita logging de conexões, desconexões e DDL.
+- **Healthcheck:** Docker monitora automaticamente a saúde do Postgres via `pg_isready`.
+- **Rotação de senhas:** em produção, atualize a senha em `.env.production` e rode `ALTER USER` via `psql` antes de reiniciar containers.

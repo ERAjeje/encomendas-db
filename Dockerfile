@@ -22,10 +22,14 @@ WORKDIR /var/lib/postgresql
 
 COPY --from=builder /build/migrations/ /docker-entrypoint-initdb.d/
 COPY --from=builder /build/scripts/ /docker-entrypoint-initdb.d/
+COPY postgresql.conf /docker-entrypoint-initdb.d/postgresql.conf
 
 RUN chmod -R 755 /docker-entrypoint-initdb.d
 
 EXPOSE 5432
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" || exit 1
 
 VOLUME ["/var/lib/postgresql/data"]
 

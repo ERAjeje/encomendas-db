@@ -33,6 +33,7 @@ Nenhum teste automatizado ainda. Próxima etapa: adicionar smoke-test que usa `p
 - **Pacotes vinculados a sessões:** `migrations/009_alter_packages_add_receipt_session_id.sql` inclui FK `receipt_session_id` na tabela `packages`.
 - **Seleção de ambiente dinâmica:** Makefile agora escolhe automaticamente `.env.<ENVIRONMENT>`, `.env.local` ou `.env` ao rodar `make docker-run`.
 - **Usuário do backend:** `migrations/010_create_backend_user.sql` cria role `backend_portaria_db_user` com permissões limitadas (CRUD + sequences) para acesso seguro pelo serviço backend.
+- **Hardening de segurança:** Dockerfile inclui `HEALTHCHECK`; `postgresql.conf` habilita logging de auditoria (conexões, DDL); Makefile não expõe porta 5432 em produção; backend AGENTS.md documenta prevenção de SQL injection e uso de credenciais limitadas.
 
 ## Próximos Passos
 
