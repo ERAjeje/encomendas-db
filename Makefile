@@ -16,6 +16,7 @@ docker-run: docker-build
 	else echo "No .env file found for $(ENVIRONMENT)"; exit 1; fi; \
 	echo "Using env file: $$SELECTED_ENV"; \
 	(docker stop $(CONTAINER) >/dev/null 2>&1 || true); \
+	(docker rm $(CONTAINER) >/dev/null 2>&1 || true); \
 	docker run -d --name $(CONTAINER) --env-file $$SELECTED_ENV -p $(PORT):5432 $(IMAGE)
 
 docker-stop:
