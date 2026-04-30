@@ -1,0 +1,11 @@
+.env
+.env.local
+.env.development
+.env.production
+!.env.example
+.DS_Store
+data/
+volumes/
+tmp/
+*.log
+psql_history
