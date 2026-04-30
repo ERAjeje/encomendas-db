@@ -48,7 +48,7 @@ O Makefile escolhe automaticamente o arquivo `.env` com base na variável `ENVIR
 ## Estrutura
 
 ```
-bd/
+db/
 ├── AGENTS.md
 ├── Dockerfile
 ├── Makefile

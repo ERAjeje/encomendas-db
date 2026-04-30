@@ -3,7 +3,7 @@
 ## Estrutura Atual
 
 ```
-bd/
+db/
 ├── AGENTS.md                  # Instruções específicas para agentes
 ├── Dockerfile                 # Imagem Postgres multi-stage (builder + runtime)
 ├── Makefile                   # Orquestra docker build/run/logs
