@@ -13,7 +13,6 @@ FROM postgres:16-alpine
 
 ENV POSTGRES_DB=portaria \
     POSTGRES_USER=portaria_admin \
-    POSTGRES_PASSWORD=changeme \
     POSTGRES_PORT=5432 \
     POSTGRES_INIT_APP_DB=portaria_app \
     POSTGRES_GRPC_TARGET=backend:8080 \
